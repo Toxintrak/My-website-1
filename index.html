@@ -521,17 +521,21 @@
 
             const noteBox = document.getElementById('dynamicNoteBox');
             if (goal === 'lose') {
-                        noteBox.innerHTML = 'Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein targets are elevated to preserve lean mass.';
-    } else if (goal === 'gain') {
-        noteBox.innerHTML = 'Targeting a 500 kcal daily surplus puts you on pace to gain lean mass effectively. Ensure progressive overload in your training.';
-    } else {
-        noteBox.innerHTML = 'Targeting maintenance calories to support energy levels, hormonal health, and steady performance capacity.';
-    }
+                noteBox.innerHTML = 'Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein targets are elevated to preserve lean mass.';
+            } else if (goal === 'gain') {
+                noteBox.innerHTML = 'Targeting a 500 kcal daily surplus puts you on pace to gain lean mass effectively. Ensure progressive overload in your training.';
+            } else {
+                noteBox.innerHTML = 'Targeting maintenance calories to support energy levels, hormonal health, and steady performance capacity.';
+            }
 
-    // This part switches the "pages" visually
-    document.getElementById('inputPanel').style.display = 'none';
-    document.getElementById('resultsPanel').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
+            // This reveals the hidden results block instantly
+            document.getElementById('resultsBlock').style.display = 'block';
+            
+            // This smoothly scrolls down to display the macros
+            window.scrollTo({ top: document.getElementById('resultsBlock').offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
     
