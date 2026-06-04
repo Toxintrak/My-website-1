@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacroForge // Precision Nutrition Engine</title>
+    <style>
+        :root {
+            --bg-dark: #0F0F14;
+            --card-bg: #1A1A24;
+            --input-bg: #242432;
+            --text-light: #F8FAFC;
+            --text-muted: #64748B;
+            --accent-lime: #CCFF00;
+            --accent-cyan: #00F5D4;
+            --accent-orange: #FF7A00;
+            --accent-yellow: #FFD600;
+            --border-color: #2D2D3F;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+        header {
+            text-align: center;
+            margin: 15px 0 25px 0;
+        }
+        header h1 {
+            color: var(--text-light);
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+        header h1 span {
+            color: var(--accent-lime);
+        }
+        header p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 4px;
+        }
+        .section-title {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+        .panel-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.24);
+        }
+        .input-row {
+            display: flex;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            align-items: center;
+            padding: 8px 16px;
+            margin-bottom: 14px;
+        }
+        .input-row label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            width: 80px;
+        }
+        .input-row input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: right;
+            outline: none;
+            padding-right: 10px;
+        }
+        .input-row .unit {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            width: 30px;
+            text-align: right;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .selection-box {
+            position: relative;
+        }
+        .selection-box input[type="radio"] {
+            display: none;
+        }
+        .selection-label {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            height: 100%;
+            transition: all 0.2s ease;
+        }
+        .selection-label .title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+        .selection-label .desc {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+        .selection-box input[type="radio"]:checked + .selection-label {
+            border-color: var(--accent-lime);
+            background-color: rgba(204, 255, 0, 0.04);
+            box-shadow: 0 0 12px rgba(204, 255, 0, 0.1);
+        }
+        .selection-box input[type="radio"]:checked + .selection-label .title {
+            color: var(--accent-lime);
+        }
+        .btn-forge {
+            width: 100%;
+            background-color: var(--accent-lime);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(204, 255, 0, 0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-forge:active {
+            transform: scale(0.98);
+        }
+        .results-section {
+            display: none;
+            animation: slideUp 0.4s ease forwards;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .split-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+        .split-stats span strong {
+            color: var(--text-light);
+        }
+        .main-calories-box {
+            text-align: center;
+            background: linear-gradient(135deg, #1E1E2F, #161622);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 15px;
+        }
+        .main-calories-box .num {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-lime);
+            line-height: 1;
+        }
+        .main-calories-box .lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+        }
+        .macro-pill-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+        }
+        .macro-pill-card .left-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .macro-badge {
+            width: 6px;
+            height: 24px;
+            border-radius: 3px;
+        }
+        .macro-pill-card.p .macro-badge { background-color: var(--accent-cyan); }
+        .macro-pill-card.c .macro-badge { background-color: var(--accent-orange); }
+        .macro-pill-card.f .macro-badge { background-color: var(--accent-yellow); }
+        .macro-pill-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .macro-pill-card .pct {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+        .macro-pill-card .val {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .meal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #242432;
+            padding: 12px 4px;
+        }
+        .meal-row:last-child {
+            border-bottom: none;
+        }
+        .meal-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .meal-macros {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+        .meal-macros span {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-left: 4px;
+        }
+        .dynamic-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            padding: 0 4px;
+        }
+        .dynamic-note strong {
+            color: var(--accent-lime);
+        }
+        footer {
+            text-align: center;
+            color: #27273A;
+            font-size: 0.7rem;
+            margin: 25px 0 10px 0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MACRO<span>FORGE</span></h1>
+            <p>Precision Nutrition Calculator</p>
+        </header>
+
+        <div class="panel-card">
+            <div class="section-title">Your Stats</div>
+            
+            <div class="input-row">
+                <label for="age">Age</label>
+                <input type="number" id="age" value="25">
+                <div class="unit">yrs</div>
+            </div>
+            <div class="input-row">
+                <label for="weight">Weight</label>
+                <input type="number" id="weight" value="75">
+                <div class="unit">kg</div>
+            </div>
+            <div class="input-row">
+                <label for="height">Height</label>
+                <input type="number" id="height" value="175">
+                <div class="unit">cm</div>
+            </div>
+
+            <div class="section-title" style="margin-top: 20px;">Biological Sex</div>
+            <div class="grid-2">
+                <div class="selection-box">
+                    <input type="radio" name="sex" id="male" value="male" checked>
+                    <label for="male" class="selection-label">
+                        <span class="title">Male</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="sex" id="female" value="female">
+                    <label for="female" class="selection-label">
+                        <span class="title">Female</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-title">Activity Level</div>
+            <div class="grid-2">
+                <div class="selection-box">
+                    <input type="radio" name="activity" id="act-sed" value="1.2">
+                    <label for="act-sed" class="selection-label">
+                        <span class="title">Sedentary</span>
+                        <span class="desc">Desk job, little movement</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="activity" id="act-light" value="1.375">
+                    <label for="act-light" class="selection-label">
+                        <span class="title">Light</span>
+                        <span class="desc">Exercise 1-3 days/week</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="activity" id="act-mod" value="1.55" checked>
+                    <label for="act-mod" class="selection-label">
+                        <span class="title">Moderate</span>
+                        <span class="desc">Exercise 3-5 days/week</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="activity" id="act-active" value="1.725">
+                    <label for="act-active" class="selection-label">
+                        <span class="title">Active</span>
+                        <span class="desc">Exercise 6-7 days/week</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-title">Primary Goal</div>
+            <div class="grid-3">
+                <div class="selection-box">
+                    <input type="radio" name="goal" id="goal-lose" value="lose" checked>
+                    <label for="goal-lose" class="selection-label">
+                        <span class="title">Lose Weight</span>
+                        <span class="desc">-500 kcal deficit fat-loss</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="goal" id="goal-maintain" value="maintain">
+                    <label for="goal-maintain" class="selection-label">
+                        <span class="title">Maintain</span>
+                        <span class="desc">TDEE balanced macros</span>
+                    </label>
+                </div>
+                <div class="selection-box">
+                    <input type="radio" name="goal" id="goal-gain" value="gain">
+                    <label for="goal-gain" class="selection-label">
+                        <span class="title">Gain Muscle</span>
+                        <span class="desc">+500 kcal hypertrophy</span>
+                    </label>
+                </div>
+            </div>
+            <button class="btn-forge" onclick="forgeMacros()">Forge My Macros</button>
+        </div>
+             <div id="resultsBlock" class="results-section">
+            <div class="section-title">Your Daily Targets</div>
+            
+            <div class="split-stats">
+                <span>BMR: <strong id="bmrValue">1,778</strong></span>
+                <span>TDEE: <strong id="tdeeValue">2,756</strong></span>
+            </div>
+
+            <div class="main-calories-box">
+                <div id="calorieValue" class="num">2,256</div>
+                <div class="lbl">Target Daily Calories (kcal/day)</div>
+            </div>
+
+            <div class="section-title">Daily Macros</div>
+            
+            <div class="macro-pill-card p">
+                <div class="left-info">
+                    <div class="macro-badge"></div>
+                    <div>
+                        <div class="name">Protein</div>
+                        <div id="pPct" class="pct">Protein 40%</div>
+                    </div>
+                </div>
+                <div id="pVal" class="val">226g</div>
+            </div>
+
+            <div class="macro-pill-card c">
+                <div class="left-info">
+                    <div class="macro-badge"></div>
+                    <div>
+                        <div class="name">Carbs</div>
+                        <div id="cPct" class="pct">Carbs 30%</div>
+                    </div>
+                </div>
+                <div id="cVal" class="val">169g</div>
+            </div>
+
+            <div class="macro-pill-card f">
+                <div class="left-info">
+                    <div class="macro-badge"></div>
+                    <div>
+                        <div class="name">Fats</div>
+                        <div id="fPct" class="pct">Fat 30%</div>
+                    </div>
+                </div>
+                <div id="fVal" class="val">75g</div>
+            </div>
+
+            <div class="panel-card" style="margin-top: 20px; padding: 15px 20px;">
+                <div class="section-title" style="padding-left:0; margin-bottom:5px;">Suggested Meal Split (3 Meals)</div>
+                <div class="meal-row">
+                    <span class="meal-name">Breakfast</span>
+                    <span id="bMeal" class="meal-macros"><span>68g</span> P <span>51g</span> C <span>22g</span> F</span>
+                </div>
+                <div class="meal-row">
+                    <span class="meal-name">Lunch</span>
+                    <span id="lMeal" class="meal-macros"><span>90g</span> P <span>68g</span> C <span>30g</span> F</span>
+                </div>
+                <div class="meal-row">
+                    <span class="meal-name">Dinner</span>
+                    <span id="dMeal" class="meal-macros"><span>68g</span> P <span>51g</span> C <span>22g</span> F</span>
+                </div>
+            </div>
+
+            <div id="dynamicNoteBox" class="dynamic-note">
+                Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein target protects muscle while cutting. Hit protein targets first!
+            </div>
+        </div>
+        <footer>MACROFORGE UTILITY ENGINE // MIFFLIN-ST JEOR ARCHITECTURE</footer>
+    </div>
+
+    <script>
+        function forgeMacros() {
+            const age = parseFloat(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const activity = parseFloat(document.querySelector('input[name="activity"]:checked').value);
+            const goal = document.querySelector('input[name="goal"]:checked').value;
+            const isMale = document.getElementById('male').checked;
+
+            if (!age || !weight || !height) {
+                alert("Please complete all profile measurements accurately.");
+                return;
+            }
+
+            let bmr = 0;
+            if (isMale) {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            let tdee = bmr * activity;
+            let targetCalories = tdee;
+            let pRatio = 0.30, cRatio = 0.40, fRatio = 0.30; 
+
+            if (goal === 'lose') {
+                targetCalories = tdee - 500;
+                pRatio = 0.40; cRatio = 0.30; fRatio = 0.30;
+            } else if (goal === 'gain') {
+                targetCalories = tdee + 500;
+                pRatio = 0.30; cRatio = 0.45; fRatio = 0.25;
+            }
+
+            document.getElementById('bmrValue').innerText = Math.round(bmr).toLocaleString();
+            document.getElementById('tdeeValue').innerText = Math.round(tdee).toLocaleString();
+            document.getElementById('calorieValue').innerText = Math.round(targetCalories).toLocaleString();
+
+            let pGrams = Math.round((targetCalories * pRatio) / 4);
+            let cGrams = Math.round((targetCalories * cRatio) / 4);
+            let fatGrams = Math.round((targetCalories * fRatio) / 9);
+
+            document.getElementById('pVal').innerText = pGrams + 'g';
+            document.getElementById('cVal').innerText = cGrams + 'g';
+            document.getElementById('fVal').innerText = fatGrams + 'g';
+
+            document.getElementById('pPct').innerText = `Protein ${Math.round(pRatio * 100)}%`;
+            document.getElementById('cPct').innerText = `Carbs ${Math.round(cRatio * 100)}%`;
+            document.getElementById('fPct').innerText = `Fat ${Math.round(fRatio * 100)}%`;
+
+            let bP = Math.round(pGrams * 0.3), bC = Math.round(cGrams * 0.3), bF = Math.round(fatGrams * 0.3);
+            let lP = Math.round(pGrams * 0.4), lC = Math.round(cGrams * 0.4), lF = Math.round(fatGrams * 0.4);
+            let dP = pGrams - bP - lP, dC = cGrams - bC - lC, dF = fatGrams - bF - lF;
+
+            document.getElementById('bMeal').innerHTML = `<span>${bP}g</span> P <span>${bC}g</span> C <span>${bF}g</span> F`;
+            document.getElementById('lMeal').innerHTML = `<span>${lP}g</span> P <span>${lC}g</span> C <span>${lF}g</span> F`;
+            document.getElementById('dMeal').innerHTML = `<span>${dP}g</span> P <span>${dC}g</span> C <span>${dF}g</span> F`;
+
+            const noteBox = document.getElementById('dynamicNoteBox');
+            if (goal === 'lose') {
+                noteBox.innerHTML = `Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein target of ${pGrams}g protects muscle while cutting. Hit protein targets f
