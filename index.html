@@ -521,4 +521,17 @@
 
             const noteBox = document.getElementById('dynamicNoteBox');
             if (goal === 'lose') {
-                noteBox.innerHTML = `Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein target of ${pGrams}g protects muscle while cutting. Hit protein targets f
+                        noteBox.innerHTML = 'Targeting a 500 kcal daily deficit puts you on pace to lose <strong>~0.5 kg/week</strong>. Protein targets are elevated to preserve lean mass.';
+    } else if (goal === 'gain') {
+        noteBox.innerHTML = 'Targeting a 500 kcal daily surplus puts you on pace to gain lean mass effectively. Ensure progressive overload in your training.';
+    } else {
+        noteBox.innerHTML = 'Targeting maintenance calories to support energy levels, hormonal health, and steady performance capacity.';
+    }
+
+    // This part switches the "pages" visually
+    document.getElementById('inputPanel').style.display = 'none';
+    document.getElementById('resultsPanel').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+    
